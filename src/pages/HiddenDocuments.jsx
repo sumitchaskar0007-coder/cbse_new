@@ -26,7 +26,7 @@ const documents = [
     file: '/h_pdf/No Objection Certificate.pdf',
   },
   {
-    title: 'PTA Member',
+    title: 'SMC Committee',
     file: '/h_pdf/PTA member (1).pdf',
   },
   {
@@ -42,7 +42,7 @@ const documents = [
     file: '/h_pdf/Safe drinking water.pdf',
   },
   {
-    title: 'School Document',
+    title: 'RTE certificate',
     file: '/h_pdf/Image to PDF 20260410 14.58.01.pdf',
   },
   {
