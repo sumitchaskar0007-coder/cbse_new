@@ -42,6 +42,10 @@ const documents = [
     file: '/h_pdf/Safe drinking water.pdf',
   },
   {
+    title: 'Mandatory Disclosure',
+    file: '/h_pdf/Mandatory Disclosure.pdf',
+  },
+  {
     title: 'RTE certificate',
     file: '/h_pdf/Image to PDF 20260410 14.58.01.pdf',
   },
