@@ -58,7 +58,17 @@ const udanBooks = {
     pdf: "/books/udan8.pdf",
     desc: "Professional ethics, hospital administration, and career readiness.",
   },
+
+   9: {
+    id: "9",
+    title: "Udan 9",
+    cover: "/books/udan.png",
+    pdf: "/books/udan9.pdf",
+    desc: "Advanced clinical skills, patient assessment, and treatment planning.",
+  },
 };
+
+ 
 
 export default function Udan() {
   const { id } = useParams();

@@ -98,7 +98,7 @@ const Navbar = () => {
       label: "Udan",
       dropdown: true,
       type: "udan",
-      items: Array.from({ length: 8 }, (_, index) => ({
+      items: Array.from({ length: 9 }, (_, index) => ({
         label: `Udan ${index + 1}`,
         path: `/udan/${index + 1}`,
       })),
