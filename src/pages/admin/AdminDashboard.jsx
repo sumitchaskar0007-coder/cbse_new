@@ -65,13 +65,24 @@ const AdminDashboard = () => {
               </div>
             </Link>
 
-            {/* BLOG ADMIN (NEW) */}
+            {/* BLOG ADMIN */}
             <Link to="/admin/blogs" className="bg-white shadow rounded-lg hover:shadow-lg transition">
               <div className="p-6 flex items-center">
                 <div className="bg-orange-500 rounded-md p-3 text-white">📝</div>
                 <div className="ml-5">
                   <p className="text-sm text-gray-500">Blog System</p>
                   <p className="text-lg font-medium">Manage Blogs</p>
+                </div>
+              </div>
+            </Link>
+
+            {/* VIDEO ADMIN (NEW) */}
+            <Link to="/admin/videos" className="bg-white shadow rounded-lg hover:shadow-lg transition">
+              <div className="p-6 flex items-center">
+                <div className="bg-pink-500 rounded-md p-3 text-white">🎬</div>
+                <div className="ml-5">
+                  <p className="text-sm text-gray-500">Video System</p>
+                  <p className="text-lg font-medium">Manage Videos</p>
                 </div>
               </div>
             </Link>

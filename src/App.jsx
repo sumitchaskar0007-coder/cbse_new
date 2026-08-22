@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import ProtectedRoutes from './components/ProtectedRoutes';
-
+import VideoAdmin from './pages/admin/VideoAdmin';
+import Video from './pages/Video';
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLogin from './pages/admin/AdminLogin';
@@ -65,6 +66,7 @@ function AppContent() {
           <Route path="/mandatory-public-disclosure" element={<HiddenDocuments />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
+<Route path="/videos" element={<Video />} />
 
           {/* Admin Auth Route */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -84,6 +86,14 @@ function AppContent() {
             element={
               <ProtectedRoutes>
                 <GalleryAdmin />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/admin/videos"
+            element={
+              <ProtectedRoutes>
+                <VideoAdmin />
               </ProtectedRoutes>
             }
           />

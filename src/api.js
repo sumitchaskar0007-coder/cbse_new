@@ -83,3 +83,21 @@ export const blogAPI = {
   }),
   bulkDelete: (ids) => API.post("/blogs/bulk-delete", { ids }),
 };
+
+/* ---------------- VIDEO APIs ---------------- */
+// `onUploadProgress` is optional — pass a callback like
+// (e) => setProgress(Math.round((e.loaded * 100) / e.total))
+// to show a progress bar while a large video file uploads.
+export const videoAPI = {
+  getAll: () => API.get('/videos'),
+  getOne: (id) => API.get(`/videos/${id}`),
+  create: (formData, onUploadProgress) => API.post('/videos', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress,
+  }),
+  update: (id, formData, onUploadProgress) => API.put(`/videos/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress,
+  }),
+  delete: (id) => API.delete(`/videos/${id}`),
+};

@@ -132,6 +132,8 @@ const Navbar = () => {
         { label: "Academics", isDropdownParent: true },
         { label: "Facilities", path: "/facilities" },
         { label: "Info Center", path: "/info-center" },
+            { label: "Videos", path: "/videos" },
+
       ],
     },
   ];
