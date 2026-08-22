@@ -1,137 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { blogAPI } from "../../api";
+import "../../styles/blog-admin.css";
 
-const BlogAdmin = () => {
-  const navigate = useNavigate();
-  const [blogs, setBlogs] = useState([]);
-  const [form, setForm] = useState({ title: "", description: "", image: null, imagePreview: null });
-  const [editId, setEditId] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [selectedBlogs, setSelectedBlogs] = useState([]);
-  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
-
-  useEffect(() => { fetchBlogs(); }, []);
-
-  const fetchBlogs = async () => {
-    const res = await blogAPI.getAll();
-    setBlogs(res.data);
-  };
-
-  const handleImageChange = e => {
-    const file = e.target.files[0];
-    if (file) setForm({ ...form, image: file, imagePreview: URL.createObjectURL(file) });
-  };
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setLoading(true);
-
-    const fd = new FormData();
-    fd.append("title", form.title);
-    fd.append("description", form.description);
-    if (form.image) fd.append("image", form.image);
-
-    editId ? await blogAPI.update(editId, fd) : await blogAPI.create(fd);
-
-    setForm({ title: "", description: "", image: null, imagePreview: null });
-    setEditId(null);
-    fetchBlogs();
-    setLoading(false);
-  };
-
-  const editBlog = b => {
-    setForm({ title: b.title, description: b.description, image: null, imagePreview: null });
-    setEditId(b._id);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const deleteBlog = async id => {
-    if (window.confirm("Delete this blog?")) {
-      await blogAPI.delete(id);
-      fetchBlogs();
-    }
-  };
-
-  const getImageUrl = img =>
-    img ? `${import.meta.env.VITE_API_URL.replace("/api", "")}${img}` : null;
-
-  return (
-    <div className="min-h-screen bg-gray-50 mt-20 sm:mt-24">
-
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6">
-
-        {/* HEADER */}
-        <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold">Blog Admin</h1>
-
-          <button
-            onClick={() => navigate("/admin/blogs/bulk")}
-            className="bg-green-600 text-white px-5 py-2 rounded-lg"
-          >
-            📦 Bulk Upload
-          </button>
-        </div>
-
-        {/* FORM */}
-        <form onSubmit={handleSubmit} className="bg-white p-5 rounded-xl shadow mb-10">
-          <input
-            className="border p-2 w-full mb-3 rounded"
-            placeholder="Title"
-            value={form.title}
-            onChange={e => setForm({ ...form, title: e.target.value })}
-            required
-          />
-
-          <textarea
-            className="border p-2 w-full mb-3 rounded"
-            rows="4"
-            placeholder="Description"
-            value={form.description}
-            onChange={e => setForm({ ...form, description: e.target.value })}
-            required
-          />
-
-          <input type="file" onChange={handleImageChange} className="mb-4" />
-
-          <button className="bg-blue-600 text-white px-6 py-2 rounded">
-            {editId ? "Update" : "Create"}
-          </button>
-        </form>
-
-        {/* BLOG GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          {blogs.map(b => (
-            <div key={b._id} className="bg-white rounded-xl shadow overflow-hidden">
-
-              {b.image && (
-                <img
-                  src={getImageUrl(b.image)}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-
-              <div className="p-4">
-                <h3 className="font-bold mb-2">{b.title}</h3>
-                <p className="text-sm text-gray-600 mb-3">{b.description}</p>
-
-                <div className="flex gap-3">
-                  <button onClick={() => editBlog(b)} className="text-blue-600">Edit</button>
-                  <button onClick={() => deleteBlog(b._id)} className="text-red-600">Delete</button>
-                </div>
-              </div>
-
-            </div>
-          ))}
-
-        </div>
-
-      </div>
-    </div>
-  );
-};
-
-export default BlogAdmin;
+const blank = { title:"", slug:"", author:"Jadhavar International School", description:"", metaTitle:"", metaDescription:"", imageAlt:"", image:null, imagePreview:null };
+const slugify = (value) => value.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const baseUrl = (import.meta.env.VITE_API_URL || "").replace(/\/api\/?$/, "");
+export default function BlogAdmin() {
+ const [blogs,setBlogs]=useState([]),[form,setForm]=useState(blank),[editId,setEditId]=useState(null),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
+ const load=()=>blogAPI.getAll().then(({data})=>setBlogs(data)); useEffect(()=>{load()},[]);
+ const change=(key,value)=>setForm(f=>({...f,[key]:value,...(key==="title"&&!editId?{slug:slugify(value)}:{})}));
+ const submit=async(e)=>{e.preventDefault();setBusy(true);setMessage("");try{const data=new FormData();Object.entries(form).forEach(([key,value])=>{if(value!==null&&key!=="imagePreview")data.append(key,value)}); editId?await blogAPI.update(editId,data):await blogAPI.create(data);setForm(blank);setEditId(null);setMessage("Article saved successfully.");load()}catch{setMessage("Unable to save the article. Please try again.")}finally{setBusy(false)}};
+ const edit=(b)=>{setEditId(b._id);setForm({...blank,...b,image:null,imagePreview:b.image?`${baseUrl}${b.image}`:null});scrollTo({top:0,behavior:"smooth"})};
+ const remove=async(id)=>{if(confirm("Delete this article?")){await blogAPI.delete(id);load()}};
+ return <main className="blog-admin"><header><p>CONTENT MANAGEMENT</p><h1>{editId?"Edit article":"Write a new article"}</h1><span>Use the editor exactly as you would a Medium-style story. A cover image is optional.</span></header><form onSubmit={submit}><div className="admin-fields"><label>Article title<input required value={form.title} onChange={e=>change("title",e.target.value)} /></label><label>URL slug<input required value={form.slug} onChange={e=>change("slug",slugify(e.target.value))} /><small>Creates /blog/{form.slug||"your-article"}</small></label><label>Author<input value={form.author} onChange={e=>change("author",e.target.value)} /></label><label>Cover image (optional)<input type="file" accept="image/*" onChange={e=>{const image=e.target.files[0];change("image",image);change("imagePreview",image?URL.createObjectURL(image):null)}} /></label><label>Image alt text<input value={form.imageAlt} onChange={e=>change("imageAlt",e.target.value)} placeholder="Describe the image for readers and search engines" /></label></div>{form.imagePreview&&<img className="admin-preview" src={form.imagePreview} alt="Cover preview"/>}<label className="editor-label">Article content</label><ReactQuill theme="snow" value={form.description} onChange={value=>change("description",value)} modules={{toolbar:[["header",[2,3,false]],["bold","italic","underline","blockquote"],[{list:"ordered"},{list:"bullet"}],["link","image"],["clean"]]}} /><div className="admin-fields seo-fields"><label>SEO title<input value={form.metaTitle} onChange={e=>change("metaTitle",e.target.value)} placeholder="Defaults to article title" /></label><label>SEO description<textarea value={form.metaDescription} onChange={e=>change("metaDescription",e.target.value)} placeholder="A concise search result description" /></label></div>{message&&<p className="admin-message">{message}</p>}<div className="form-actions"><button disabled={busy}>{busy?"Saving…":editId?"Update article":"Publish article"}</button>{editId&&<button type="button" className="cancel" onClick={()=>{setEditId(null);setForm(blank)}}>Cancel</button>}</div></form><section className="admin-list"><h2>Published articles</h2>{blogs.map(b=><article key={b._id}>{b.image&&<img src={`${baseUrl}${b.image}`} alt=""/>}<div><h3>{b.title}</h3><p>/blog/{b.slug || "legacy article"}</p></div><button onClick={()=>edit(b)}>Edit</button><button className="delete" onClick={()=>remove(b._id)}>Delete</button></article>)}</section></main>;
+}

@@ -73,6 +73,7 @@ export const careersAPI = {
 /* ---------------- BLOG APIs ---------------- */
 export const blogAPI = {
   getAll: () => API.get("/blogs"),
+  getBySlug: (slug) => API.get(`/blogs/${slug}`),
   create: (data) => API.post("/blogs", data),
   update: (id, data) => API.put(`/blogs/${id}`, data),
   delete: (id) => API.delete(`/blogs/${id}`),

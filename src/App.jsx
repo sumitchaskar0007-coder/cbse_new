@@ -65,7 +65,7 @@ function AppContent() {
           <Route path="/udan/:id" element={<Udan />} />
           <Route path="/mandatory-public-disclosure" element={<HiddenDocuments />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
 <Route path="/videos" element={<Video />} />
 
           {/* Admin Auth Route */}
